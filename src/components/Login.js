@@ -1,55 +1,47 @@
-import axios from "axios";
-import { useState } from "react";
-const Login = () => {
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState({});
+import React, { Fragment, useState } from "react";
+import { Form, Input, Typography, Button } from "antd";
 
-  const handleClick = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const { data } = await axios.get(
-        "https://jsonplaceholder.typicode.com/users/1"
-      );
-      setUser(data);
-    } catch {
-      setError(true);
-    }
-    setLoading(false)
-  };
+function AntForm() {
+	const [complete, setComplete] = useState(false);
 
-  return (
-    <div className="container">
-      <span className="user">{user.name}</span>
-      <form>
-        <input
-          type="text"
-          placeholder="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
+	const onFinish = () => {
+		setComplete(true);
+	}
+
+	if (complete) {
+		return (
+			<Typography.Title data-testid="complete">Complete</Typography.Title>
+		)
+	}
+
+	return (
+		<Fragment>
+			<Typography.Title>Demo Form</Typography.Title>
+			<Form name="test" onFinish={onFinish}>
+				<Form.Item
+					name="username"
+					rules={[{ required: true, message: "Username required" }]}>
+					 <Input placeholder="Username" label="User name" data-testid="user" type="text"/>
+				</Form.Item>
+                <Form.Item
+      label="Password"
+        name="password"
+        rules={[{ required: true, message: 'Password! required' }]}
+      >
+        <Input
+          data-testid="password"
           type="password"
-          placeholder="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
         />
-        <button disabled={!username || !password} onClick={handleClick}>
-          {loading ? "please wait" : "Login"}
-        </button>
-        <span
-          data-testid="error"
-          style={{ visibility: error ? "visible" : "hidden" }}
-        >
-          Something went wrong!
-        </span>
-      </form>
-    </div>
-  );
-};
+      </Form.Item> 
+				<Form.Item>
+					<Button type="primary" htmlType="submit">
+						Submit
+					</Button>
+				</Form.Item>
+			</Form>
+		</Fragment>
+	);
+}
 
-export default Login;
-
+export default AntForm;
